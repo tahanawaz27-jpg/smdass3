@@ -3,13 +3,18 @@ package com.example.ass3;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
     private ListView lvProjects;
     private EditText etSearchProject;
     private TextView tvShowingCount;
+    private ActivityResultLauncher<Intent> projectLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,25 @@ public class HomeActivity extends AppCompatActivity {
 
         updateShowingCount();
 
+        projectLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Project updated = (Project) result.getData().getSerializableExtra("updated_project");
+                        if (updated != null) {
+                            // Find in projectList by ID and update
+                            for (int i = 0; i < projectList.size(); i++) {
+                                if (projectList.get(i).getId().equals(updated.getId())) {
+                                    projectList.set(i, updated);
+                                    break;
+                                }
+                            }
+                            filterProjects(etSearchProject.getText().toString());
+                        }
+                    }
+                }
+        );
+
         etSearchProject.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -63,14 +88,50 @@ public class HomeActivity extends AppCompatActivity {
 
         lvProjects.setOnItemClickListener((parent, view, position, id) -> {
             Project selectedProject = filteredList.get(position);
-            // Open ProjectActivity (to be implemented in commit 2)
-            Toast.makeText(this, "Opening: " + selectedProject.getName(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(HomeActivity.this, ProjectActivity.class);
+            intent.putExtra("project", selectedProject);
+            projectLauncher.launch(intent);
         });
 
-        btnNewProject.setOnClickListener(v -> {
-            // New Project dialog (to be enhanced in commit 2)
-            Toast.makeText(this, "+ New Project clicked", Toast.LENGTH_SHORT).show();
-        });
+        btnNewProject.setOnClickListener(v -> showNewProjectDialog());
+    }
+
+    private void showNewProjectDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_new_project, null);
+        EditText etName = dialogView.findViewById(R.id.etNewProjectName);
+        EditText etTag = dialogView.findViewById(R.id.etNewProjectTag);
+        EditText etDesc = dialogView.findViewById(R.id.etNewProjectDesc);
+
+        builder.setView(dialogView)
+                .setTitle("Create New Project")
+                .setPositiveButton("Add", (dialog, which) -> {
+                    String name = etName.getText().toString().trim();
+                    String tag = etTag.getText().toString().trim();
+                    String desc = etDesc.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(name) || name.length() > 60) {
+                        Toast.makeText(this, "Project name must be 1-60 characters", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (TextUtils.isEmpty(tag) || tag.length() > 20) {
+                        Toast.makeText(this, "Project tag must be 1-20 characters", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (TextUtils.isEmpty(desc) || desc.length() > 500) {
+                        Toast.makeText(this, "Project description must be 1-500 characters", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String newId = "p_" + System.currentTimeMillis();
+                    Project newProject = new Project(newId, name, tag, desc, 0);
+                    projectList.add(0, newProject);
+
+                    filterProjects(etSearchProject.getText().toString());
+                    Toast.makeText(this, "Project created successfully", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void initSampleData() {
@@ -129,6 +190,7 @@ public class HomeActivity extends AppCompatActivity {
         if (q.isEmpty()) {
             filteredList.addAll(projectList);
         } else {
+            // Match name or tag
             for (Project p : projectList) {
                 if (p.getName().toLowerCase().contains(q) || p.getTag().toLowerCase().contains(q)) {
                     filteredList.add(p);

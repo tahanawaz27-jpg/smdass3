@@ -28,6 +28,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ProjectActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
