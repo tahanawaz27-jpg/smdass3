@@ -358,4 +358,30 @@ public class TasksFragment extends Fragment {
         this.project = updatedProject;
         applyFiltersAndSort();
     }
+
+    public void applyExternalFilters(String statusFilter, String dateFilter) {
+        if (statusFilter != null && spinnerStatus != null) {
+            selectedStatusFilter = statusFilter;
+            for (int i = 0; i < spinnerStatus.getCount(); i++) {
+                if (spinnerStatus.getItemAtPosition(i).toString().equalsIgnoreCase(statusFilter)) {
+                    spinnerStatus.setSelection(i);
+                    break;
+                }
+            }
+        }
+        if (dateFilter != null && spinnerDate != null) {
+            selectedDateFilter = dateFilter;
+            if ("Overdue".equals(dateFilter)) {
+                selectedStatusFilter = "All statuses";
+                if (spinnerStatus != null) spinnerStatus.setSelection(0);
+            }
+            for (int i = 0; i < spinnerDate.getCount(); i++) {
+                if (spinnerDate.getItemAtPosition(i).toString().equalsIgnoreCase(dateFilter)) {
+                    spinnerDate.setSelection(i);
+                    break;
+                }
+            }
+        }
+        applyFiltersAndSort();
+    }
 }

@@ -215,6 +215,9 @@ public class ProjectActivity extends AppCompatActivity {
         if (tabLayoutProject.getTabAt(1) != null) {
             tabLayoutProject.getTabAt(1).select();
         }
+        if (tasksFragment != null) {
+            tasksFragment.applyExternalFilters(statusFilter, dateFilter);
+        }
     }
 
     public void switchToFilesTab() {
