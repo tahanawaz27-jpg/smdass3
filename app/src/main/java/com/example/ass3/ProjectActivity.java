@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -30,6 +32,7 @@ public class ProjectActivity extends AppCompatActivity {
     private TasksFragment tasksFragment;
     private FilesFragment filesFragment;
     private DiscussionFragment discussionFragment;
+    private TextView tvToolbarTitle, tvToolbarSubtitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,19 @@ public class ProjectActivity extends AppCompatActivity {
         setSupportActionBar(toolbarProject);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(project.getName());
-            getSupportActionBar().setSubtitle(project.getTag());
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        tvToolbarTitle = findViewById(R.id.tvToolbarTitle);
+        tvToolbarSubtitle = findViewById(R.id.tvToolbarSubtitle);
+        Button btnToolbarInvite = findViewById(R.id.btnToolbarInvite);
+
+        tvToolbarTitle.setText(project.getName());
+        tvToolbarSubtitle.setText(project.getTag());
+
+        btnToolbarInvite.setOnClickListener(v -> {
+            Toast.makeText(this, "Invite control UI (per assignment specs)", Toast.LENGTH_SHORT).show();
+        });
 
         toolbarProject.setNavigationOnClickListener(v -> finishWithResult());
 
@@ -150,10 +163,8 @@ public class ProjectActivity extends AppCompatActivity {
                     project.setTag(tag);
                     project.setDescription(desc);
 
-                    if (getSupportActionBar() != null) {
-                        getSupportActionBar().setTitle(name);
-                        getSupportActionBar().setSubtitle(tag);
-                    }
+                    tvToolbarTitle.setText(name);
+                    tvToolbarSubtitle.setText(tag);
 
                     if (overviewFragment != null) overviewFragment.updateData(project);
                     if (tasksFragment != null) tasksFragment.updateData(project);
