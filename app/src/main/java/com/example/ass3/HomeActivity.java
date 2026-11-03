@@ -7,9 +7,11 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +62,6 @@ public class HomeActivity extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Project updated = (Project) result.getData().getSerializableExtra("updated_project");
                         if (updated != null) {
-                            // Find in projectList by ID and update
                             for (int i = 0; i < projectList.size(); i++) {
                                 if (projectList.get(i).getId().equals(updated.getId())) {
                                     projectList.set(i, updated);
@@ -102,6 +103,11 @@ public class HomeActivity extends AppCompatActivity {
         EditText etName = dialogView.findViewById(R.id.etNewProjectName);
         EditText etTag = dialogView.findViewById(R.id.etNewProjectTag);
         EditText etDesc = dialogView.findViewById(R.id.etNewProjectDesc);
+        Spinner spinnerAttachment = dialogView.findViewById(R.id.spinnerNewProjectAttachment);
+
+        ArrayAdapter<String> attachAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"None", "sports-projectv2.fig (Image)", "briefing from client.pdf (Text)", "mount asset.png (Image)"});
+        spinnerAttachment.setAdapter(attachAdapter);
 
         builder.setView(dialogView)
                 .setTitle("Create New Project")
@@ -125,8 +131,17 @@ public class HomeActivity extends AppCompatActivity {
 
                     String newId = "p_" + System.currentTimeMillis();
                     Project newProject = new Project(newId, name, tag, desc, 0);
-                    projectList.add(0, newProject);
 
+                    int selectedAttachPos = spinnerAttachment.getSelectedItemPosition();
+                    if (selectedAttachPos == 1) {
+                        newProject.getAttachments().add(new Attachment("cat_1", "sports-projectv2.fig", "Image", "2.4 MB - Figma Design File"));
+                    } else if (selectedAttachPos == 2) {
+                        newProject.getAttachments().add(new Attachment("cat_2", "briefing from client.pdf", "Text", "450 KB - PDF Document"));
+                    } else if (selectedAttachPos == 3) {
+                        newProject.getAttachments().add(new Attachment("cat_3", "mount asset.png", "Image", "1.1 MB - PNG Asset"));
+                    }
+
+                    projectList.add(0, newProject);
                     filterProjects(etSearchProject.getText().toString());
                     Toast.makeText(this, "Project created successfully", Toast.LENGTH_SHORT).show();
                 })
@@ -190,7 +205,6 @@ public class HomeActivity extends AppCompatActivity {
         if (q.isEmpty()) {
             filteredList.addAll(projectList);
         } else {
-            // Match name or tag
             for (Project p : projectList) {
                 if (p.getName().toLowerCase().contains(q) || p.getTag().toLowerCase().contains(q)) {
                     filteredList.add(p);
