@@ -1,12 +1,17 @@
 package com.example.ass3;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,9 @@ import com.example.ass3.fragments.TasksFragment;
 import com.example.ass3.models.Project;
 import com.example.ass3.models.Task;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ProjectActivity extends AppCompatActivity {
 
@@ -178,27 +186,75 @@ public class ProjectActivity extends AppCompatActivity {
 
     public void showAddTaskDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_task, null);
-        EditText etTaskDesc = dialogView.findViewById(R.id.etTaskDesc);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_task_full, null);
+        EditText etDesc = dialogView.findViewById(R.id.etTaskDescFull);
+        TextView tvCounter = dialogView.findViewById(R.id.tvCharCounter);
+        Spinner spinnerStatusDialog = dialogView.findViewById(R.id.spinnerDialogStatus);
+        Spinner spinnerPriorityDialog = dialogView.findViewById(R.id.spinnerDialogPriority);
+        Button btnSelectDate = dialogView.findViewById(R.id.btnSelectDate);
+        Button btnClearDate = dialogView.findViewById(R.id.btnClearDate);
+
+        final String[] dueDateHolder = {""};
+
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"To do", "In progress", "Done"});
+        spinnerStatusDialog.setAdapter(statusAdapter);
+
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Normal", "High", "Low"});
+        spinnerPriorityDialog.setAdapter(priorityAdapter);
+        spinnerPriorityDialog.setSelection(0);
+
+        etDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int len = s.length();
+                tvCounter.setText(len + "/500");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        btnSelectDate.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                String dateStr = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                dueDateHolder[0] = dateStr;
+                btnSelectDate.setText(dateStr);
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        btnClearDate.setOnClickListener(v -> {
+            dueDateHolder[0] = "";
+            btnSelectDate.setText("Select due date");
+        });
 
         builder.setView(dialogView)
                 .setTitle("Add New Task")
                 .setPositiveButton("Add", (dialog, which) -> {
-                    String desc = etTaskDesc.getText().toString().trim();
+                    String desc = etDesc.getText().toString().trim();
                     if (TextUtils.isEmpty(desc) || desc.length() > 500) {
                         Toast.makeText(this, "Task description must be 1-500 characters", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
+                    String status = spinnerStatusDialog.getSelectedItem().toString();
+                    String priority = spinnerPriorityDialog.getSelectedItem().toString();
+                    String dueDate = dueDateHolder[0];
+
                     String taskId = "t_" + System.currentTimeMillis();
-                    Task newTask = new Task(taskId, desc, "To do", "Normal", "");
+                    Task newTask = new Task(taskId, desc, status, priority, dueDate);
                     project.getTasks().add(newTask);
 
                     if (overviewFragment != null) overviewFragment.updateData(project);
                     if (tasksFragment != null) tasksFragment.updateData(project);
                     updateTabCounts();
 
-                    Toast.makeText(this, "Task added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Task added successfully", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
