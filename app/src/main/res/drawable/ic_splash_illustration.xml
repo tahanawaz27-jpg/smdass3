@@ -1,0 +1,50 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="180dp"
+    android:viewportWidth="280"
+    android:viewportHeight="240">
+
+  <!-- Background stars / dots -->
+  <path android:fillColor="#1A1D2E" android:pathData="M115,78 L117,78 L117,82 L119,82 L119,80 L121,80 L121,78 L119,78 L119,76 L117,76 L117,78 Z"/>
+  <path android:fillColor="#1A1D2E" android:pathData="M165,65 L166,65 L166,67 L167,67 L167,66 L168,66 L168,65 L167,65 L167,64 L166,64 L166,65 Z"/>
+  <path android:fillColor="#1A1D2E" android:pathData="M210,85 L211,85 L211,87 L212,87 L212,86 L213,86 L213,85 L212,85 L212,84 L211,84 L211,85 Z"/>
+  <path android:fillColor="#1A1D2E" android:pathData="M190,120 L191,120 L191,122 L192,122 L192,121 L193,121 L193,120 L192,120 L192,119 L191,119 L191,120 Z"/>
+  <path android:fillColor="#1A1D2E" android:pathData="M140,110 L141,110 L141,112 L142,112 L142,111 L143,111 L143,110 L142,110 L142,109 L141,109 L141,110 Z"/>
+
+  <!-- Top-Left Teal Card (Quote) -->
+  <path android:fillColor="#14B8A6" android:pathData="M60,65 q0,-8 8,-8 h24 q8,0 8,8 v24 q0,8 -8,8 h-24 q-8,0 -8,-8 z"/>
+  <path android:fillColor="#FFFFFF" android:pathData="M76,73 c3,0 5,2 5,5 s-2,5 -5,5 c-1,0 -2,-0.5 -2.5,-1.5 c1.5,-0.5 2.5,-2 2.5,-3.5 c0,-2 -1.5,-3.5 -3.5,-3.5 c-2,0 -3.5,1.5 -3.5,3.5 c0,3 2,5.5 5,5.5 c0.5,0 1,0 1.5,-0.1 c-0.5,2 -2.5,3.6 -5,3.6 c-3.5,0 -6,-2.5 -6,-6 c0,-3.5 2.5,-6 6,-6 z"/>
+
+  <!-- Middle-Left Blue Card (Atom) -->
+  <path android:fillColor="#3B82F6" android:pathData="M60,105 q0,-8 8,-8 h24 q8,0 8,8 v24 q0,8 -8,8 h-24 q-8,0 -8,-8 z"/>
+  <path android:strokeColor="#FFFFFF" android:strokeWidth="2" android:fillColor="#00000000" android:pathData="M68,117 a5,3 0,1 1,10 0 a5,3 0,1 1,-10 0"/>
+  <path android:fillColor="#FFFFFF" android:pathData="M70,117 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0"/>
+
+  <!-- Bottom-Left Dark Navy Card (Wave) -->
+  <path android:fillColor="#1A1D2E" android:pathData="M60,145 q0,-8 8,-8 h24 q8,0 8,8 v24 q0,8 -8,8 h-24 q-8,0 -8,-8 z"/>
+  <path android:strokeColor="#14B8A6" android:strokeWidth="3" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M68,161 c3,-5 6,-5 9,0 c3,5 6,5 9,0"/>
+
+  <!-- Central Pink Organic Blob -->
+  <path android:fillColor="#FF2E88" android:pathData="M115,100 q25,-15 45,5 q20,20 10,40 q-10,20 -35,25 q-25,5 -30,-20 q-5,-25 10,-50 z"/>
+
+  <!-- Central Green Square -->
+  <path android:fillColor="#14B8A6" android:pathData="M150,115 h26 v26 h-26 z"/>
+
+  <!-- Dark Pencil / Brush slant behind -->
+  <path android:fillColor="#1A1D2E" android:pathData="M135,145 l35,-35 l8,8 l-35,35 z"/>
+
+  <!-- Bottom Teal Lock Card -->
+  <path android:fillColor="#14B8A6" android:pathData="M110,175 q0,-6 6,-6 h18 q6,0 6,6 v18 q0,6 -6,6 h-18 q-6,0 -6,-6 z"/>
+  <path android:strokeColor="#FFFFFF" android:strokeWidth="2" android:fillColor="#00000000" android:pathData="M120,183 v-3 a3,3 0,0 1,6 0 v3"/>
+  <path android:fillColor="#FFFFFF" android:pathData="M117,183 h12 v9 h-12 z"/>
+
+  <!-- Bottom Blue Cart Card -->
+  <path android:fillColor="#3B82F6" android:pathData="M148,175 q0,-6 6,-6 h18 q6,0 6,6 v18 q0,6 -6,6 h-18 q-6,0 -6,-6 z"/>
+  <path android:strokeColor="#FFFFFF" android:strokeWidth="2" android:fillColor="#00000000" android:pathData="M156,181 h12 l-2,7 h-8 z"/>
+  <path android:fillColor="#FFFFFF" android:pathData="M157,190 a1.5,1.5 0,1 1,3 0 a1.5,1.5 0,1 1,-3 0 M165,190 a1.5,1.5 0,1 1,3 0 a1.5,1.5 0,1 1,-3 0"/>
+
+  <!-- Bottom Teal Heart Card -->
+  <path android:fillColor="#14B8A6" android:pathData="M186,175 q0,-6 6,-6 h18 q6,0 6,6 v18 q0,6 -6,6 h-18 q-6,0 -6,-6 z"/>
+  <path android:fillColor="#FFFFFF" android:pathData="M195,185 c2,-2 5,-2 7,0 l0.5,0.5 l0.5,-0.5 c2,-2 5,-2 7,0 c2,2 2,5 0,7 l-7.5,7.5 l-7.5,-7.5 c-2,-2 -2,-5 0,-7 z"/>
+
+</vector>
