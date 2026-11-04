@@ -93,11 +93,13 @@ public class TasksFragment extends Fragment {
         adapter = new TaskAdapter(getContext(), filteredTasks, (task, isDone) -> {
             task.setStatus(isDone ? "Done" : "To do");
             applyFiltersAndSort();
-            if (getActivity() instanceof ProjectActivity) {
-                // sync updates
-            }
         });
         lvTasks.setAdapter(adapter);
+
+        lvTasks.setOnItemClickListener((parent, view1, position, id) -> {
+            Task t = filteredTasks.get(position);
+            showEditTaskDialog(t);
+        });
 
         setupSpinners();
         applyFiltersAndSort();
@@ -357,6 +359,92 @@ public class TasksFragment extends Fragment {
     public void updateData(Project updatedProject) {
         this.project = updatedProject;
         applyFiltersAndSort();
+    }
+
+    private void showEditTaskDialog(Task task) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_task_full, null);
+        EditText etDesc = dialogView.findViewById(R.id.etTaskDescFull);
+        TextView tvCounter = dialogView.findViewById(R.id.tvCharCounter);
+        Spinner spinnerStatusDialog = dialogView.findViewById(R.id.spinnerDialogStatus);
+        Spinner spinnerPriorityDialog = dialogView.findViewById(R.id.spinnerDialogPriority);
+        Button btnSelectDate = dialogView.findViewById(R.id.btnSelectDate);
+        Button btnClearDate = dialogView.findViewById(R.id.btnClearDate);
+
+        etDesc.setText(task.getDescription());
+        tvCounter.setText(task.getDescription().length() + "/500");
+
+        final String[] dueDateHolder = {task.getDueDate()};
+        if (task.getDueDate() != null && !task.getDueDate().isEmpty()) {
+            btnSelectDate.setText(task.getDueDate());
+        }
+
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"To do", "In progress", "Done"});
+        spinnerStatusDialog.setAdapter(statusAdapter);
+        if ("Done".equalsIgnoreCase(task.getStatus())) spinnerStatusDialog.setSelection(2);
+        else if ("In progress".equalsIgnoreCase(task.getStatus())) spinnerStatusDialog.setSelection(1);
+        else spinnerStatusDialog.setSelection(0);
+
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Normal", "High", "Low"});
+        spinnerPriorityDialog.setAdapter(priorityAdapter);
+        if ("High".equalsIgnoreCase(task.getPriority())) spinnerPriorityDialog.setSelection(1);
+        else if ("Low".equalsIgnoreCase(task.getPriority())) spinnerPriorityDialog.setSelection(2);
+        else spinnerPriorityDialog.setSelection(0);
+
+        etDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int len = s.length();
+                tvCounter.setText(len + "/500");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        btnSelectDate.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
+                String dateStr = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                dueDateHolder[0] = dateStr;
+                btnSelectDate.setText(dateStr);
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        btnClearDate.setOnClickListener(v -> {
+            dueDateHolder[0] = "";
+            btnSelectDate.setText("Select due date");
+        });
+
+        builder.setView(dialogView)
+                .setTitle("Edit / Delete Task")
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String desc = etDesc.getText().toString().trim();
+                    if (TextUtils.isEmpty(desc) || desc.length() > 500) {
+                        Toast.makeText(requireContext(), "Task description must be 1-500 characters", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    task.setDescription(desc);
+                    task.setStatus(spinnerStatusDialog.getSelectedItem().toString());
+                    task.setPriority(spinnerPriorityDialog.getSelectedItem().toString());
+                    task.setDueDate(dueDateHolder[0]);
+
+                    applyFiltersAndSort();
+                    Toast.makeText(requireContext(), "Task updated", Toast.LENGTH_SHORT).show();
+                })
+                .setNeutralButton("Delete", (dialog, which) -> {
+                    project.getTasks().remove(task);
+                    applyFiltersAndSort();
+                    Toast.makeText(requireContext(), "Task deleted", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     public void applyExternalFilters(String statusFilter, String dateFilter) {
