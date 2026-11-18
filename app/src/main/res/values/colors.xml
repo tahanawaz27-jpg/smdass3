@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorBackground">#F5F6FA</color>
+    <color name="colorDark">#14151A</color>
+    <color name="colorPrimary">#2F6BFF</color>
+    <color name="colorCardBg">#FFFFFF</color>
+    <color name="colorTagBg">#EDEAFB</color>
+    <color name="colorTagText">#6C4FD6</color>
+    <color name="colorTextPrimary">#1A1B25</color>
+    <color name="colorTextSecondary">#8A8D98</color>
+    <color name="colorBorder">#E3E4EA</color>
+    <color name="colorInputBg">#F0F1F5</color>
+</resources>

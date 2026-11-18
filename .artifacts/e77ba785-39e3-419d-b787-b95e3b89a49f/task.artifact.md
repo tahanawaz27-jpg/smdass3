@@ -1,0 +1,6 @@
+- `[ ]` Update build.gradle with RecyclerView dependency
+- `[ ]` Migrate HomeActivity & ProjectAdapter to RecyclerView with ListAdapter and DiffUtil
+- `[ ]` Create item_task_header.xml and migrate TasksFragment & TaskAdapter to grouped RecyclerView with section headers
+- `[ ]` Implement ItemTouchHelper in TasksFragment for swipe-to-complete, swipe-to-delete, and intra-group drag-to-reorder
+- `[ ]` Migrate FilesFragment & AttachmentAdapter to RecyclerView with swipe-to-delete name confirmation
+- `[ ]` Build and verify the application successfully

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project Name"
+        android:textSize="12sp"
+        android:textColor="@color/colorTextSecondary"/>
+
+    <EditText
+        android:id="@+id/etProjectName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:hint="e.g. Login API"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project Tag"
+        android:textSize="12sp"
+        android:textColor="@color/colorTextSecondary"/>
+
+    <EditText
+        android:id="@+id/etProjectTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:hint="e.g. Backend"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attachment"
+        android:textSize="12sp"
+        android:textColor="@color/colorTextSecondary"/>
+
+    <EditText
+        android:id="@+id/etAttachment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:hint="Add file or photo name"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project Description"
+        android:textSize="12sp"
+        android:textColor="@color/colorTextSecondary"/>
+
+    <EditText
+        android:id="@+id/etProjectDescription"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/bg_edittext"
+        android:padding="12dp"
+        android:gravity="top"
+        android:hint="Describe the project"/>
+
+</LinearLayout>
